@@ -46,6 +46,7 @@
     "fullcalendar-scheduler": "^1.8.0"
   },
   "devDependencies": {
+    "@ember/jquery": "^0.5.2",
     "@ember/optional-features": "^0.6.3",
     "broccoli-asset-rev": "^2.7.0",
     "ember-cli": "~3.7.0",
@@ -68,6 +69,8 @@
     "ember-source": "~3.7.0",
     "ember-source-channel-url": "^1.1.0",
     "ember-try": "^1.0.0",
+    "eslint-plugin-ember": "^5.2.0",
+    "eslint-plugin-node": "^7.0.1",
     "loader.js": "^4.7.0",
     "qunit-dom": "^0.8.0"
   },
