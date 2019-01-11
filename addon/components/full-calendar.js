@@ -1,3 +1,5 @@
+/* global FullCalendar */
+
 import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
 import { InvokeActionMixin } from 'ember-invoke-action';
@@ -12,6 +14,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
   layout: layout,
   classNames: ['full-calendar'],
+  calendar: undefined,
 
   /////////////////////////////////////
   // FULLCALENDAR OPTIONS
@@ -36,14 +39,14 @@ export default Ember.Component.extend(InvokeActionMixin, {
   fullCalendarOptions: [
     // general display
     'header', 'footer', 'customButtons', 'buttonIcons', 'themeSystem', 'theme', 'themeButtonIcons', 'bootstrapGlyphicons',
-    'firstDay', 'isRTL', 'weekends', 'hiddenDays', 'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours',
+    'firstDay', 'rerenderDelay', 'weekends', 'hiddenDays', 'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours',
     'height', 'contentHeight', 'aspectRatio', 'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays', 'showNonCurrentDates',
 
     // clicking & hovering
     'navLinks',
 
     // timezone
-    'timezone', 'now',
+    'timeZone', 'now',
 
     // views
     'views',
@@ -59,11 +62,11 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'nowIndicator', 'visibleRange', 'validRange', 'dateIncrement', 'dateAlignment', 'duration', 'dayCount',
 
     // text/time customization
-    'locale', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
-    'dayNamesShort', 'weekNumberTitle', 'displayEventTime', 'displayEventEnd', 'eventLimitText', 'dayPopoverFormat',
+    'locale', 'columnFormat', 'titleFormat', 'buttonText', 'defaultRangeSeparator', 'titleRangeSeparator',
+    'weekNumberTitle', 'displayEventTime', 'displayEventEnd', 'eventLimitText', 'dayPopoverFormat',
 
     // selection
-    'selectable', 'selectHelper', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint', 'selectAllow',
+    'selectable', 'selectMirror', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint', 'selectAllow',
     'selectMinDistance', 'selectLongPressDelay',
 
     // event data
@@ -72,11 +75,12 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // event rendering
     'eventColor', 'eventBackgroundColor', 'eventBorderColor', 'eventTextColor', 'nextDayThreshold', 'eventOrder',
-    'eventRenderWait',
+    'progressiveEventRendering',
 
     // event dragging & resizing
-    'editable', 'eventStartEditable', 'eventDurationEditable', 'dragRevertDuration', 'dragOpacity', 'dragScroll',
-    'eventOverlap', 'eventConstraint', 'eventAllow', 'longPressDelay', 'eventLongPressDelay',
+    'editable', 'eventStartEditable', 'eventDurationEditable', 'dragRevertDuration', 'dragScroll', 'allDayMaintainDuration',
+    'eventOverlap', 'eventConstraint', 'eventAllow', 'longPressDelay', 'eventLongPressDelay', 'eventResizableFromStart',
+    'eventDragMinDistance',
 
     // dropping external elements
     'droppable', 'dropAccept',
@@ -85,7 +89,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'resourceAreaWidth', 'resourceLabelText', 'resourceColumns', 'slotWidth',
 
     // resource data
-    'resources', 'eventResourceField', 'refetchResourcesOnNavigate',
+    'resources', 'refetchResourcesOnNavigate',
 
     // resource rendering
     'resourceOrder', 'resourceGroupField', 'resourceGroupText', 'resourcesInitiallyExpanded', 'filterResourcesWithEvents',
@@ -96,10 +100,10 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
   fullCalendarEvents: [
     // general display
-    'viewRender', 'viewDestroy', 'dayRender', 'windowResize',
+    'viewSkeletonRender', 'viewSkeletonDestroy', 'dayRender', 'windowResize',
 
     // clicking and hovering
-    'dayClick', 'eventClick', 'eventMouseover', 'eventMouseout', 'navLinkDayClick', 'navLinkWeekClick',
+    'dateClick', 'eventClick', 'eventMouseEnter', 'eventMouseLeave', 'navLinkDayClick', 'navLinkWeekClick',
 
     // selection
     'select', 'unselect',
@@ -108,7 +112,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'eventDataTransform', 'loading',
 
     // event rendering
-    'eventRender', 'eventAfterRender', 'eventAfterAllRender', 'eventDestroy',
+    'eventRender', 'eventDestroy',
     'eventLimitClick',
 
     // event dragging & resizing
@@ -118,7 +122,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'drop', 'eventReceive',
 
     // resource rendering
-    'resourceText', 'resourceRender'
+    'resourceText', 'resourceRender',
   ],
 
   /////////////////////////////////////
@@ -139,11 +143,13 @@ export default Ember.Component.extend(InvokeActionMixin, {
     // add the license key for the scheduler
     options.schedulerLicenseKey = this.get('schedulerLicenseKey');
 
-    this.$().fullCalendar(options);
+    const calendar = new FullCalendar.Calendar(this.element, options);
+    this.set('calendar', calendar);
+    calendar.render();
   },
 
   willDestroyElement() {
-    this.$().fullCalendar('destroy');
+    this.get('calendar').destroy();
   },
 
   /////////////////////////////////////
@@ -201,7 +207,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
       // create an event handler that runs the function inside an event loop.
       actions[eventName] = (...args) => {
         Ember.run.schedule('actions', this, () => {
-          this.invokeAction(eventName, ...args, this.$());
+          this.invokeAction(eventName, ...args, this.get('calendar'));
         });
       };
     });
@@ -219,14 +225,15 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * re-render if changes are detected
    */
   observeEvents: observer('events.[]', function () {
-    const fc = this.$();
     const events = this.get('events');
 
-    fc.fullCalendar('removeEvents');
+    this.get('calendar').batchRendering(() => {
+      this.get('calendar').getEvents().forEach(e => e.remove());
 
-    if (events) {
-      fc.fullCalendar('addEventSource', this.get('events'));
-    }
+      if (events) {
+        this.get('calendar').addEventSource(this.get('events'));
+      }
+    });
   }),
 
   /**
@@ -234,14 +241,14 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * re-render if changes are detected
    */
   observeEventSources: observer('eventSources.[]', function () {
-     const fc = this.$();
+     this.get('calendar').batchRendering(() => {
+       this.get('calendar').getEventSources().forEach(e => e.remove());
 
-     fc.fullCalendar('removeEventSources');
-
-     this.get('eventSources').forEach(function(source){
-       if (source) {
-         fc.fullCalendar('addEventSource', source);
-       }
+       this.get('eventSources').forEach(function(source){
+         if (source) {
+           this.get('calendar').addEventSource(source);
+         }
+       });
      });
   }),
 
@@ -251,8 +258,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * @type {[type]}
    */
   observeResources: observer('resources.[]', function() {
-    const fc = this.$();
-    fc.fullCalendar('refetchResources');
+    this.get('calendar').refetchResources();
   }),
 
   /**
@@ -263,7 +269,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     const viewName = this.get('viewName');
     const viewRange = this.get('viewRange');
 
-    this.$().fullCalendar('changeView', viewName, viewRange);
+    this.get('calendar').changeView(viewName, viewRange);
 
     // Call action if it exists
     if (this.get('onViewChange')) {
@@ -277,7 +283,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
    */
   dateDidChange: Ember.observer('date', function() {
     let date = this.get('date');
-    this.$().fullCalendar('gotoDate', date);
+    this.get('calendar').gotoDate(date);
   })
 
 });

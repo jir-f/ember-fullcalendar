@@ -6,20 +6,20 @@ import moment from 'moment';
 let getEventsArray = () => {
   return Ember.A([{
     title: 'Event 1',
-    start: moment({day: 5, hour: 7, minute: 8, second: 8}),
-    end: moment({day: 5, hour: 9, minute: 8, second: 8})
+    start: moment({day: 5, hour: 7, minute: 8, second: 8}).toDate(),
+    end: moment({day: 5, hour: 9, minute: 8, second: 8}).toDate()
   }, {
     title: 'Event 2',
-    start: moment({day: 6, hour: 7, minute: 8, second: 8}),
-    end: moment({day: 6, hour: 9, minute: 8, second: 8})
+    start: moment({day: 6, hour: 7, minute: 8, second: 8}).toDate(),
+    end: moment({day: 6, hour: 9, minute: 8, second: 8}).toDate()
   }, {
     title: 'Event 3',
-    start: moment({day: 10, hour: 7, minute: 8, second: 8}),
-    end: moment({day: 10, hour: 9, minute: 48, second: 8})
+    start: moment({day: 10, hour: 7, minute: 8, second: 8}).toDate(),
+    end: moment({day: 10, hour: 9, minute: 48, second: 8}).toDate()
   }, {
     title: 'Event 4',
-    start: moment({day: 11, hour: 7, minute: 15, second: 8}),
-    end: moment({day: 11, hour: 9, minute: 8, second: 8})
+    start: moment({day: 11, hour: 7, minute: 15, second: 8}).toDate(),
+    end: moment({day: 11, hour: 9, minute: 8, second: 8}).toDate()
   }]);
 };
 
@@ -57,12 +57,12 @@ test('replacing events rerenders events', function (assert) {
 
   this.set('eventsArray', Ember.A([{
     title: 'New Event 1',
-    start: moment({day: 5, hour: 7, minute: 8, second: 8}),
-    end: moment({day: 5, hour: 9, minute: 8, second: 8})
+    start: moment({day: 5, hour: 7, minute: 8, second: 8}).toDate(),
+    end: moment({day: 5, hour: 9, minute: 8, second: 8}).toDate()
   }, {
     title: 'New Event 2',
-    start: moment({day: 6, hour: 7, minute: 8, second: 8}),
-    end: moment({day: 7, hour: 9, minute: 8, second: 8})
+    start: moment({day: 6, hour: 7, minute: 8, second: 8}).toDate(),
+    end: moment({day: 7, hour: 9, minute: 8, second: 8}).toDate()
   }]));
 
   assert.equal(this.$('.fc-title').length, 2);
@@ -116,8 +116,8 @@ test('it adds events', function (assert) {
 
   eventsArray.insertAt(2, {
     title: 'New Event',
-    start: moment({day: 15, hour: 7, minute: 8, second: 8}),
-    end: moment({day: 15, hour: 9, minute: 8, second: 8})
+    start: moment({day: 15, hour: 7, minute: 8, second: 8}).toDate(),
+    end: moment({day: 15, hour: 9, minute: 8, second: 8}).toDate()
   });
 
   assert.equal(this.$('.fc-title').length, 5);

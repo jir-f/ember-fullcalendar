@@ -49,10 +49,10 @@ module.exports = {
     if (config.emberFullCalendar && config.emberFullCalendar.includeLocales) {
       if (Array.isArray(config.emberFullCalendar.includeLocales)) {
         this.includeLocalesFiles = config.emberFullCalendar.includeLocales.map(function(localeCode) {
-          return 'dist/locale/' + localeCode + '.js';
+          return 'dist/locales/' + localeCode + '.js';
         });
       } else if (config.emberFullCalendar.includeLocales === "all") {
-        this.includeLocalesFiles = ['dist/locale-all.js'];
+        this.includeLocalesFiles = ['dist/locales-all.js'];
       } else {
         this.includeLocalesFiles = [];
       }
