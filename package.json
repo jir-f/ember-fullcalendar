@@ -46,7 +46,6 @@
     "fullcalendar-scheduler": "4.0.0-alpha.3"
   },
   "devDependencies": {
-    "@ember/jquery": "^0.5.2",
     "@ember/optional-features": "^0.6.3",
     "broccoli-asset-rev": "^2.7.0",
     "ember-cli": "~3.7.0",
