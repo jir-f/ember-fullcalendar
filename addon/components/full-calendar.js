@@ -145,8 +145,10 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     const calendar = new FullCalendar.Calendar(this.element, options);
     this.set('calendar', calendar);
+    this.get('initCalendar')(calendar);
     calendar.render();
   },
+  initCalendar() {},
 
   willDestroyElement() {
     this.get('calendar').destroy();
