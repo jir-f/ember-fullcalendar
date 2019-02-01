@@ -62,7 +62,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'nowIndicator', 'visibleRange', 'validRange', 'dateIncrement', 'dateAlignment', 'duration', 'dayCount',
 
     // text/time customization
-    'locale', 'columnFormat', 'titleFormat', 'buttonText', 'defaultRangeSeparator', 'titleRangeSeparator',
+    'locale', 'columnHeaderFormat', 'titleFormat', 'buttonText', 'defaultRangeSeparator', 'titleRangeSeparator',
     'weekNumberTitle', 'displayEventTime', 'displayEventEnd', 'eventLimitText', 'dayPopoverFormat',
 
     // selection
