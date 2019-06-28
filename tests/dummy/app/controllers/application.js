@@ -6,7 +6,7 @@ export default Controller.extend({
   fastboot: Ember.inject.service(),
 
   startDate: new Date('2016-05-05'),
-  viewName: 'basicDay',
+  viewName: 'dayGridDay',
 
   eventsArray: Ember.A([{
      //id: 1,

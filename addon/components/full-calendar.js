@@ -1,8 +1,8 @@
-/* global FullCalendar */
-
 import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
 import { InvokeActionMixin } from 'ember-invoke-action';
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
 
 const { assign, observer, computed, getOwner } = Ember;
 
@@ -143,7 +143,9 @@ export default Ember.Component.extend(InvokeActionMixin, {
     // add the license key for the scheduler
     options.schedulerLicenseKey = this.get('schedulerLicenseKey');
 
-    const calendar = new FullCalendar.Calendar(this.element, options);
+    options.plugins = [dayGridPlugin];
+
+    const calendar = new Calendar(this.element, options);
     this.set('calendar', calendar);
     this.get('initCalendar')(calendar);
     calendar.render();
