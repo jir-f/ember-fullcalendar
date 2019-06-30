@@ -1,6 +1,5 @@
 /* eslint-env node */
 'use strict';
-const fastbootTransform = require('fastboot-transform');
 
 module.exports = {
   name: 'ember-fullcalendar',
@@ -28,7 +27,6 @@ module.exports = {
 
     var plugins = config.emberFullCalendar.plugins || [
       'core',
-      'daygrid',
     ];
 
     plugins.forEach(plugin => {

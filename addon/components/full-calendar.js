@@ -2,7 +2,6 @@ import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
 import { InvokeActionMixin } from 'ember-invoke-action';
 import { Calendar } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
 
 const { assign, observer, computed, getOwner } = Ember;
 
@@ -37,92 +36,119 @@ export default Ember.Component.extend(InvokeActionMixin, {
   }),
 
   fullCalendarOptions: [
-    // general display
-    'header', 'footer', 'customButtons', 'buttonIcons', 'themeSystem', 'theme', 'themeButtonIcons', 'bootstrapGlyphicons',
-    'firstDay', 'rerenderDelay', 'weekends', 'hiddenDays', 'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours',
-    'height', 'contentHeight', 'aspectRatio', 'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays', 'showNonCurrentDates',
+    'rerenderDelay', 'defaultRangeSeparator',
 
-    // clicking & hovering
-    'navLinks',
+    // toolbar
+    'header', 'footer', 'titleFormat', 'titleRangeSeparator', 'buttonText', 'buttonIcons', 'customButtons',
 
-    // timezone
-    'timeZone', 'now',
+    // theme
+    'themeSystem', 'bootstrapGlyphicons', 'bootstrapFontawesome',
+
+    // sizing
+    'height', 'contentHeight', 'aspectRatio', 'handleWindowResize', 'windowResizeDelay',
 
     // views
-    'views',
+    'views', 'fixedWeekCount', 'showNonCurrentDates', 'allDaySlot', 'allDayText', 'slotEventOverlap',
+    'timeGridEventMinHeight',
 
-    // agenda options
-    'allDaySlot', 'allDayText', 'slotDuration', 'slotLabelFormat', 'slotLabelInterval', 'snapDuration', 'scrollTime',
-    'minTime', 'maxTime', 'slotEventOverlap', 'agendaEventMinHeight',
-
-    // list options
+    // list
     'listDayFormat', 'listDayAltFormat', 'noEventsMessage',
 
-    // current date
-    'nowIndicator', 'visibleRange', 'validRange', 'dateIncrement', 'dateAlignment', 'duration', 'dayCount',
+    // timeline
+    'resourceGroupField', 'resourceGroupText', 'resourceAreaWidth', 'resourceLabelText', 'resourceColumns',
+    'resourcesInitiallyExpanded', 'slotWidth', 'datesAboveResources',
 
-    // text/time customization
-    'locale', 'columnHeaderFormat', 'titleFormat', 'buttonText', 'defaultRangeSeparator', 'titleRangeSeparator',
-    'weekNumberTitle', 'displayEventTime', 'displayEventEnd', 'eventLimitText', 'dayPopoverFormat',
+    // custom views
+    'duration', 'dayCount', 'visibleRange',
+
+    // date & time
+    'weekends', 'hiddenDays', 'columnHeader', 'columnHeaderFormat', 'columnHeaderText', 'columnHeaderHtml',
+    'slotDuration', 'slotLabelInterval', 'slotLabelFormat', 'minTime', 'maxTime', 'scrollTime',
+
+    // date navigation
+    'dateIncrement', 'dateAlignment', 'validRange',
+
+    // date nav links
+    'navLinks', 'navLinkDayClick', 'navLinkWeekClick',
+
+    // week numbers
+    'weekNumbers', 'weekNumbersWithinDays', 'weekNumberCalculation', 'weekLabel',
 
     // selection
     'selectable', 'selectMirror', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint', 'selectAllow',
-    'selectMinDistance', 'selectLongPressDelay',
+    'selectMinDistance',
 
-    // event data
-    'events', 'eventSources', 'allDayDefault', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
-    'defaultTimedEventDuration', 'defaultAllDayEventDuration', 'forceEventDuration',
+    // now indicator
+    'nowIndicator', 'now',
 
-    // event rendering
-    'eventColor', 'eventBackgroundColor', 'eventBorderColor', 'eventTextColor', 'nextDayThreshold', 'eventOrder',
-    'progressiveEventRendering',
+    // business hours
+    'businessHours',
+
+    // event model
+    'eventDataTransform', 'allDayDefault', 'defaultTimedEventDuration', 'defaultAllDayEventDuration', 'forceEventDuration',
+
+    // event sources
+    'events', 'eventSources', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
+
+    // event display
+    'eventColor', 'eventBackgroundColor', 'eventBorderColor', 'eventTextColor', 'eventTimeFormat',
+    'displayEventTime', 'displayEventEnd', 'nextDayThreshold', 'eventOrder', 'progressiveEventRendering',
 
     // event dragging & resizing
-    'editable', 'eventStartEditable', 'eventDurationEditable', 'dragRevertDuration', 'dragScroll', 'allDayMaintainDuration',
-    'eventOverlap', 'eventConstraint', 'eventAllow', 'longPressDelay', 'eventLongPressDelay', 'eventResizableFromStart',
-    'eventDragMinDistance',
+    'editable', 'eventStartEditable', 'eventResizableFromStart', 'eventDurationEditable', 'eventResourceEditable',
+    'droppable', 'eventDragMinDistance', 'dragRevertDuration', 'dragScroll', 'snapDuration', 'allDayMaintainDuration',
+    'eventOverlap', 'eventConstraint', 'eventAllow', 'dropAccept',
 
-    // dropping external elements
-    'droppable', 'dropAccept',
-
-    // timeline view
-    'resourceAreaWidth', 'resourceLabelText', 'resourceColumns', 'slotWidth',
+    // event popover
+    'eventLimit', 'eventLimitClick', 'eventLimitText', 'dayPopoverFormat',
 
     // resource data
     'resources', 'refetchResourcesOnNavigate',
 
-    // resource rendering
-    'resourceOrder', 'resourceGroupField', 'resourceGroupText', 'resourcesInitiallyExpanded', 'filterResourcesWithEvents',
+    // resources
+    'resourceOrder', 'filterResourcesWithEvents', 'resourceText',
 
-    // vertical resource view
-    'groupByResource', 'groupByDateAndResource'
+    // international
+    'locale', 'locales', 'firstDay', 'dir',
+
+    // timezone
+    'timeZone',
+
+    // accessibility
+    'longPressDelay', 'eventLongPressDelay', 'selectLongPressDelay',
+
+    // plugins
+    'plugins',
   ],
 
   fullCalendarEvents: [
-    // general display
-    'viewSkeletonRender', 'viewSkeletonDestroy', 'dayRender', 'windowResize',
+    // sizing
+    'windowResize',
+
+    // view api
+    'viewSkeletonRender', 'viewSkeletonDestroy', 'datesRender', 'datesDestroy',
+
+    // date & time
+    'dayRender',
+
+    // date clicking & selecting
+    'dateClick', 'select', 'unselect',
+
+    // event sources
+    'eventSourceSuccess', 'eventSourceFailure', 'loading',
+
+    // event display
+    'eventRender', 'eventPositioned', 'eventDestroy',
 
     // clicking and hovering
-    'dateClick', 'eventClick', 'eventMouseEnter', 'eventMouseLeave', 'navLinkDayClick', 'navLinkWeekClick',
-
-    // selection
-    'select', 'unselect',
-
-    // event data
-    'eventDataTransform', 'loading',
-
-    // event rendering
-    'eventRender', 'eventDestroy',
-    'eventLimitClick',
+    'eventClick', 'eventMouseEnter', 'eventMouseLeave',
 
     // event dragging & resizing
-    'eventDragStart', 'eventDragStop', 'eventDrop', 'eventResizeStart', 'eventResizeStop', 'eventResize',
-
-    // dropping external events
-    'drop', 'eventReceive',
+    'eventDragStart', 'eventDragStop', 'eventDrop', 'drop', 'eventReceive', 'eventLeave',
+    'eventResizeStart', 'eventResizeStop', 'eventResize',
 
     // resource rendering
-    'resourceText', 'resourceRender',
+    'resourceRender',
   ],
 
   /////////////////////////////////////
@@ -142,8 +168,6 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // add the license key for the scheduler
     options.schedulerLicenseKey = this.get('schedulerLicenseKey');
-
-    options.plugins = [dayGridPlugin];
 
     const calendar = new Calendar(this.element, options);
     this.set('calendar', calendar);

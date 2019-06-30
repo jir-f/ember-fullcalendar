@@ -1,9 +1,12 @@
 import Ember from 'ember';
 const { Controller } = Ember;
+import dayGridPlugin from '@fullcalendar/daygrid';
 
 export default Controller.extend({
 
   fastboot: Ember.inject.service(),
+
+  plugins: [dayGridPlugin],
 
   startDate: new Date('2016-05-05'),
   viewName: 'dayGridDay',
@@ -35,8 +38,8 @@ export default Controller.extend({
        let eventTitle = this.get('eventTitle');
         this.get('eventsArray').insertAt(2, {
           title: eventTitle,
-          start: new Date('2016-05-11T07:15:08'),
-          end: new Date('2016-05-11T09:08:08'),
+          start: new Date('2016-05-05T07:15:08'),
+          end: new Date('2016-05-05T09:08:08'),
         });
      },
 
