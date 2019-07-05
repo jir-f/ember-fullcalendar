@@ -70,7 +70,7 @@ module('Integration | Component | full calendar', function(hooks) {
     }, {
       title: 'New Event 2',
       start: moment({ day: 6, hour: 7, minute: 8, second: 8 }).toDate(),
-      end: moment({ day: 7, hour: 9, minute: 8, second: 8 }).toDate()
+      end: moment({ day: 6, hour: 9, minute: 8, second: 8 }).toDate()
     }]));
 
     assert.equal(findAll('.fc-title').length, 2);
@@ -87,7 +87,7 @@ module('Integration | Component | full calendar', function(hooks) {
     assert.equal(findAll('.fc-title').length, 4);
     assert.equal(concatTextContent('.fc-title'), 'Event 1Event 2Event 3Event 4');
 
-    this.set('eventsArray', null);
+    this.set('eventsArray', []);
 
     assert.equal(findAll('.fc-title').length, 0);
   });
@@ -103,6 +103,8 @@ module('Integration | Component | full calendar', function(hooks) {
     assert.equal(concatTextContent('.fc-title'), 'Event 1Event 2Event 3Event 4');
 
     eventsArray.removeAt(2);
+    this.set('eventsArray', []);
+    this.set('eventsArray', eventsArray);
 
     assert.equal(findAll('.fc-title').length, 3);
     assert.equal(concatTextContent('.fc-title'), 'Event 1Event 2Event 4');
@@ -123,6 +125,8 @@ module('Integration | Component | full calendar', function(hooks) {
       start: moment({ day: 15, hour: 7, minute: 8, second: 8 }).toDate(),
       end: moment({ day: 15, hour: 9, minute: 8, second: 8 }).toDate()
     });
+    this.set('eventsArray', []);
+    this.set('eventsArray', eventsArray);
 
     assert.equal(findAll('.fc-title').length, 5);
     assert.equal(concatTextContent('.fc-title'), 'Event 1Event 2Event 3Event 4New Event');
