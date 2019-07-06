@@ -4,7 +4,7 @@ import { InvokeActionMixin } from 'ember-invoke-action';
 import { Calendar } from '@fullcalendar/core';
 import deepEqual from 'fast-deep-equal'
 
-const { assign, observer, computed, getOwner } = Ember;
+const { assign, computed, getOwner } = Ember;
 
 export default Ember.Component.extend(InvokeActionMixin, {
   /////////////////////////////////////
@@ -157,18 +157,18 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
   didInsertElement() {
     const calendarOptions = this.getOtions();
-    const caledarEvents = this.getEvents();
+    const calendarEvents = this.getEvents();
 
     const options =
       assign(
         {},
         calendarOptions,
-        caledarEvents
+        calendarEvents
       );
     
     this.setProperties({
       calendarOptions: calendarOptions,
-      caledarEvents: caledarEvents
+      calendarEvents: calendarEvents
     });
 
     // Temporary patch for `eventDataTransform` method throwing error
