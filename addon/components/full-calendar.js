@@ -66,7 +66,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'slotDuration', 'slotLabelInterval', 'slotLabelFormat', 'minTime', 'maxTime', 'scrollTime',
 
     // date navigation
-    'dateIncrement', 'dateAlignment', 'validRange',
+    'defaultDate', 'dateIncrement', 'dateAlignment', 'validRange',
 
     // date nav links
     'navLinks', 'navLinkDayClick', 'navLinkWeekClick',
@@ -176,7 +176,6 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // add the license key for the scheduler
     options.schedulerLicenseKey = this.get('schedulerLicenseKey');
-
     const calendar = new Calendar(this.element, options);
     this.set('calendar', calendar);
     calendar.render();
@@ -184,12 +183,16 @@ export default Ember.Component.extend(InvokeActionMixin, {
   /*
    * Expose Calendar instance 
    */
-    if(this.getCalendarInstance) {
-      this.getCalendarInstance(this.calendar);
+    if (this.afterRender) {
+      this.afterRender(this.calendar);
     }
   },
 
   willDestroyElement() {
+    if (this.willDestroy) {
+      this.willDestroy();
+    }
+
     this.get('calendar').destroy();
   },
 
@@ -202,7 +205,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     removals = this.removedAttrs(this.calendarOptions, newOptions, removals);
     updates = this.updatedAttrs(this.calendarOptions, newOptions, updates);
 
-    if(!deepEqual(this.calendarOptions, newOptions)) {
+    if (!deepEqual(this.calendarOptions, newOptions)) {
       this.setProperties({
         calendarOptions: newOptions
       });
@@ -227,7 +230,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
    */
   updatedAttrs(prevAttrs, attrs, updates) {
     for (const attrName in attrs) {
-      if(!deepEqual(attrs[attrName], prevAttrs[attrName])) {
+      if (!deepEqual(attrs[attrName], prevAttrs[attrName])) {
         updates[attrName] = attrs[attrName]
       }
     }
